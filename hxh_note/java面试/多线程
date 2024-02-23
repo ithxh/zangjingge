@@ -1,0 +1,58 @@
+
+
+Java中有创建线程的方式？
+
+方式一：继承Thread类，重写run方法，
+
+```java
+public class LtyThread extends Thread{
+    @Override
+    public void run() {
+        System.out.println("LtyThread-线程执行...");
+    }
+}
+```
+
+方式二：实现Runnable接口，重写run方法，
+
+```java
+public class LtyRunnable implements Runnable{
+    @Override
+    public void run() {
+        System.out.println("LtyRunnable 线程执行...");
+    }
+}
+class Test{
+    public static void main(String[] args) {
+        Runnable runnable = new LtyRunnable();
+        new Thread(runnable).start();
+    }
+}
+```
+
+方式三：实现Callable接口
+
+```java
+public class LtyCallable implements Callable<String> {
+    @Override
+    public String call() throws Exception {
+        int sum = 0;
+        for (int i = 1; i <= 100; i++) {
+            sum += i;
+        }
+        return "求1~100的和:"+sum;
+    }
+}
+class Test{
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        FutureTask<String> task = new FutureTask<>(new LtyCallable());
+        new Thread(task).start();
+        String s = task.get();
+        System.out.println(s);
+    }
+}
+```
+
+方式四：利用线程池，创建线程
+
+为什么不使用Executors创建线程池？
